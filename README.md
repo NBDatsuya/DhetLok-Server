@@ -4,5 +4,5 @@
 ## 架构
 
 前后端分离
-- 前端使用Angular编写JS，使用Tailwindcss美化界面
-- 后端使用Flask搭建
+- [前端](https://github.com/NBDatsuya/DhetLok-Front)使用Angular编写JS，使用Tailwindcss美化界面
+- [后端](https://github.com/NBDatsuya/DhetLok-Server)使用Flask搭建

@@ -6,6 +6,7 @@ app = Flask(__name__)
 cors = CORS(app, supports_credentials=True)
 app.secret_key = 'some_secret_key'
 
+app.config['JSON_AS_ASCII'] = False  # 解决中文乱码问题
 # 配置连接
 app.config['SQLALCHEMY_DATABASE_URI'] = \
     'mysql+pymysql://root:root@localhost:3306/dhetlok'

@@ -9,6 +9,16 @@ def register():
     username = request.json['username']
     password = request.json['password']
     # hashed_pwd = generate_password_hash(password)
+
+    # 判断用户名是否存在
+    user = UserInfo.query.filter_by(username=username).first()
+    if user:
+        return jsonify({
+            "code": 1,
+            "msg": "注册失败，该用户已存在",
+            "data": {}
+        }), 200
+
     try:
         user = UserInfo(
             username=username,  # 用户名
@@ -40,7 +50,8 @@ def login():
     user = UserInfo.query.filter_by(
         username=username,
         password=password,
-        deleted=0
+        deleted=0,
+        role=0
     ).first()
 
     # if user and check_password_hash(user['pwd'], pwd):
@@ -52,6 +63,7 @@ def login():
             "data": {
                 "id": user.id,
                 "username": user.username,
+                "role": user.role
             }
         }), 200
     else:
@@ -62,7 +74,39 @@ def login():
         }), 200
 
 
-@user_bp.route('/logout')
+@user_bp.route('/admin-login', methods=['POST'])
+def admin_login():
+    username = request.json['username']
+    password = request.json['password']
+
+    user = UserInfo.query.filter_by(
+        username=username,
+        password=password,
+        deleted=0,
+        role=1
+    ).first()
+
+    # if user and check_password_hash(user['pwd'], pwd):
+    if user:
+        session['user_id'] = user.id
+        return jsonify({
+            "code": 0,
+            "msg": "请求成功",
+            "data": {
+                "id": user.id,
+                "username": user.username,
+                "role": user.role
+            }
+        }), 200
+    else:
+        return jsonify({
+            "code": 1,
+            "msg": "登陆失败，用户名或密码错误",
+            "data": {}
+        }), 200
+
+
+@user_bp.route('/logout', methods=['POST'])
 def logout():
     session.pop('user_id', None)
     return jsonify({
@@ -70,3 +114,31 @@ def logout():
         "msg": "请求成功",
         "data": {}
     }), 200
+
+
+@user_bp.route('/modify-password', methods=['POST'])
+def modify_password():
+    user = request.form.get("id")
+    old_pwd = request.form.get("old")
+    new_pwd = request.form.get("new")
+    # 检查原始密码是否正确
+    user = UserInfo.query.filter_by(id=user).first()  # 获取用户信息
+    res = {}
+    if not user.password == old_pwd:
+        res['code'] = 1
+        res['msg'] = '密码修改错误：旧密码输入错误'
+        return jsonify(res)
+    # 更改密码
+    try:
+        user.password = new_pwd
+        db.session.add(user)
+        db.session.commit()
+
+        res['code'] = 0
+        res['msg'] = '密码修改成功'
+        return jsonify(res)
+    except Exception as e:
+        res['status'] = -1
+        res['message'] = '密码修改错误，原因{}'.format(e)
+        return jsonify(res)
+

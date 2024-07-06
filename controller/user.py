@@ -138,7 +138,7 @@ def modify_password():
         res['msg'] = '密码修改成功'
         return jsonify(res)
     except Exception as e:
-        res['status'] = -1
-        res['message'] = '密码修改错误，原因{}'.format(e)
+        res['code'] = -1
+        res['msg'] = '密码修改错误，原因{}'.format(e)
         return jsonify(res)
 

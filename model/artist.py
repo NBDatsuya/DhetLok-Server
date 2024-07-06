@@ -17,9 +17,3 @@ class Artist(db.Model):
         self.genre = genre
         self.img_url = img_url
         self.hot = hot
-
-    def to_dict(self):
-        return {column.name: getattr(self, column.name) for column in self.__table__.columns}
-
-    def to_json(self):
-        return json.dumps(self.to_dict())

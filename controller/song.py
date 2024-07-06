@@ -3,6 +3,7 @@ import time
 
 from external_utils import Blueprint, jsonify, send_file, request, db
 from model.song import Song
+from util.util import to_dict
 
 song_bp = Blueprint("song", __name__, url_prefix="/api/song")
 
@@ -14,7 +15,7 @@ def get_all():
     songs = Song.query.all()
 
     return jsonify({
-        "data": [song.to_dict() for song in songs], "code": 0, "msg": "请求成功"
+        "data": [to_dict(song) for song in songs], "code": 0, "msg": "请求成功"
     })
 
 
@@ -23,7 +24,7 @@ def top(limit):
     songs = Song.query.order_by(Song.hits.desc()).limit(limit=limit).all()
 
     return jsonify({
-        "data": [song.to_dict() for song in songs], "code": 0, "msg": "请求成功"
+        "data": [to_dict(song) for song in songs], "code": 0, "msg": "请求成功"
     })
 
 
@@ -38,7 +39,7 @@ def get_by_genre(genre):
     songs = Song.query.filter_by(genre=1).order_by(Song.hits.desc()).all()
 
     return jsonify({
-        "data": [song.to_dict() for song in songs], "code": 0, "msg": "请求成功"
+        "data": [to_dict(song) for song in songs], "code": 0, "msg": "请求成功"
     })
 
 
@@ -60,7 +61,7 @@ def search():
 
     return jsonify({
         "code": 0, "msg": "请求成功",
-        "data": [song.to_dict() for song in songs]
+        "data": [to_dict(song) for song in songs]
     })
 
 

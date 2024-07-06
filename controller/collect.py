@@ -1,11 +1,12 @@
 from external_utils import Blueprint, jsonify, request, db
 from model.collect import Collect
+from util.util import to_dict
 
 collect_bp = Blueprint("collect", __name__, url_prefix="/api/collect")
 
 
-@collect_bp.route("/<int:song>", methods=["POST"])
-def collect(song):
+@collect_bp.route("/do/<int:song>", methods=["POST"])
+def do_collect(song):
     user = request.args.get("user")
     collect_info = Collect.query.filter_by(  # 根据用户ID和景区ID判断是否该收藏
         owner=int(user),
@@ -38,7 +39,5 @@ def owner_collect(owner):
     page_data = (Collect.query
                  .filter_by(owner=owner)
                  .paginate(page=page, per_page=10))
-    res = {'code': 0, 'msg': '收藏成功', 'data': page_data}
-    return jsonify(res)  # 返回json数据
-
-
+    res = {'code': 0, 'msg': '收藏成功', 'data': [to_dict(data) for data in page_data]}
+    return jsonify(res)  # 可能有bug

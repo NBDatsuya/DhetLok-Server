@@ -4,6 +4,7 @@ import time
 from external_utils import Blueprint, jsonify, send_file, request, db
 from model.artist import Artist
 from model.song import Song
+from util.util import to_dict
 
 artist_bp = Blueprint("artist", __name__, url_prefix="/api/artist")
 
@@ -13,7 +14,7 @@ def get_all():
     artists = Artist.query.all()
 
     return jsonify({
-        "data": [artist.to_dict() for artist in artists], "code": 0, "msg": "请求成功"
+        "data": [to_dict(artist) for artist in artists], "code": 0, "msg": "请求成功"
     })
 
 
@@ -22,7 +23,7 @@ def get_hot(limit):
     artists = Artist.query.filter_by(hot=1).limit(limit=limit).all()
 
     return jsonify({
-        "data": [artist.to_dict() for artist in artists], "code": 0, "msg": "请求成功"
+        "data": [to_dict(artist) for artist in artists], "code": 0, "msg": "请求成功"
     })
 
 
@@ -48,8 +49,8 @@ def get_by_id(artist_id):
     return jsonify({
         "code": 0, "msg": "请求成功",
         "data": {
-            "songs": [song.to_dict() for song in song],
-            "artist": artist.to_dict()
+            "songs": [to_dict(song) for song in song],
+            "artist": to_dict(artist)
         }
     })
 

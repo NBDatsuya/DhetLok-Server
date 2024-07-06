@@ -138,3 +138,17 @@ def upload_song():
 
     res = {'code': 0, 'msg': "上传成功", "data": path}
     return jsonify(res)
+
+
+@song_bp.route("/hit/<int:song>", methods=["POST"])
+def hit_plus(song):
+    song = Song.query.get_or_404(song)
+    if not song:
+        res = {'code': 1, 'msg': '歌曲不存在'}
+    # 更改点击量
+    else:
+        song.hits += 1
+        db.session.add(song)
+        db.session.commit()
+        res = {'code': 0, 'msg': '请求成功，播放次数加1'}
+    return jsonify(res)

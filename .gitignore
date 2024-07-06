@@ -1,7 +1,12 @@
-venv
-venv/**
+/venv
+/venv/**
 
-.idea
-.idea/**
+/.idea
+/.idea/**
 
-.idea/misc.xml
+/.idea/misc.xml
+
+/static/avatar/
+/static/avatar/**
+/static/music/**
+/static/music/

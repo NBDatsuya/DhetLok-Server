@@ -1,6 +1,6 @@
 # 模型类：用户信息
 
-from external_utils import db
+from model import db
 
 
 class UserInfo(db.Model):

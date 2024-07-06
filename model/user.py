@@ -1,4 +1,5 @@
 # 模型类：用户信息
+import json
 
 from model import db
 
@@ -16,3 +17,9 @@ class UserInfo(db.Model):
         self.password = password
         self.role = role
         self.deleted = deleted
+
+    def to_dict(self):
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}
+
+    def to_json(self):
+        return json.dumps(self.to_dict())

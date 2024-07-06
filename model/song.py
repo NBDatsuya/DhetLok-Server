@@ -1,3 +1,5 @@
+import json
+
 from model import db
 
 
@@ -17,3 +19,9 @@ class Song(db.Model):
         self.file_url = file_url
         self.hits = hits
         self.genre = genre
+
+    def to_dict(self):
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}
+
+    def to_json(self):
+        return json.dumps(self.to_dict())

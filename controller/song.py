@@ -136,5 +136,5 @@ def upload_song():
     path = str(int(time.time())) + ".mp3"
     file_obj.save(os.path.join("../static/music", path))
 
-    res = {'code': 0, 'msg': "上传成功"}
+    res = {'code': 0, 'msg': "上传成功", "data": path}
     return jsonify(res)

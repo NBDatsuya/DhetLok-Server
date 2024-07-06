@@ -1,3 +1,6 @@
+import os
+import time
+
 from external_utils import Blueprint, jsonify, send_file, request, db
 from model.artist import Artist
 from model.song import Song
@@ -117,4 +120,17 @@ def delete_artist():
         res = {'code': 0, 'msg': '删除成功'}
     except Exception as e:
         res = {'code': 1, 'msg': '删除失败，原因：{}'.format(str(e))}
+    return jsonify(res)
+
+
+@artist_bp.route("/avatar/upload", methods=["POST"])
+def upload_avatar():
+    file_obj = request.files.get("file")
+    if file_obj is None:
+        return "文件上传为空"
+
+    path = str(int(time.time())) + ".jpg"
+    file_obj.save(os.path.join("../static/music", path))
+
+    res = {'code': 0, 'data': path, 'msg': "上传成功"}
     return jsonify(res)

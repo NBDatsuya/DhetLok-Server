@@ -51,7 +51,7 @@ def search():
     if keyword:
         keyword = keyword.strip()
         songs = (Song.query
-                 .filter(Song.songName.like('%' + keyword + '%'))
+                 .filter(Song.real_name.like('%' + keyword + '%'))
                  .order_by(Song.hits.desc())
                  .paginate(page=page, per_page=10))
     else:

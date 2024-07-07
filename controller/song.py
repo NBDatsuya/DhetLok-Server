@@ -67,7 +67,8 @@ def search():
 
 @song_bp.route("/add", methods=["POST"])
 def add_song():
-    form = request.form.to_dict()
+    form = request.json
+    print(form)
     '''
     songName = request.form.get("songName")
     singer = request.form.get("singer")
@@ -77,7 +78,7 @@ def add_song():
     try:
         # 为Song类属性赋值
         song = Song(
-            real_name=form["real_name"],  # 歌曲名称
+            real_name=form["realName"],  # 歌曲名称
             artist=form["artist"],
             genre=form['genre'],  # 歌曲类型
             file_url=form['fileUrl']  # 文件路径
@@ -94,7 +95,7 @@ def add_song():
 
 @song_bp.route("/edit", methods=["POST"])
 def edit_song():
-    form = request.form.to_dict()
+    form = request.json
     song = Song.query.filter_by(id=form["id"]).first()
 
     # 更改Song表
@@ -114,11 +115,10 @@ def edit_song():
     return jsonify(res)
 
 
-@song_bp.route("/del")
-def delete_song():
-    id = request.args.get('id')  # 获取ID
+@song_bp.route("/del/<int:song_id>", methods=["POST"])
+def delete_song(song_id):
     try:
-        song = Song.query.get_or_404(int(id))
+        song = Song.query.get_or_404(int(song_id))
         db.session.delete(song)
         db.session.commit()
         res = {'code': 0, 'msg': '删除成功'}

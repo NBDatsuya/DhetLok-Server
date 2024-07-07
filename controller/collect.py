@@ -1,5 +1,6 @@
 from external_utils import Blueprint, jsonify, request, db
 from model.collect import Collect
+from model.song import Song
 from util.util import to_dict
 
 collect_bp = Blueprint("collect", __name__, url_prefix="/api/collect")
@@ -33,10 +34,10 @@ def do_collect(song):
     return jsonify(res)  # 返回json数据
 
 
-@collect_bp.route("/my-collect/<int:owner>")
+@collect_bp.route("/my/<int:owner>")
 def owner_collect(owner):
     page = request.args.get('page', type=int)  # 获取page参数值
-    page_data = (Collect.query
+    page_data = (Song.query.join(Collect, Collect.song == Song.id)
                  .filter_by(owner=owner)
                  .paginate(page=page, per_page=10))
     res = {'code': 0, 'msg': '收藏成功', 'data': [to_dict(data) for data in page_data]}

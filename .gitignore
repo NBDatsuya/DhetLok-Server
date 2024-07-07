@@ -1,0 +1,12 @@
+/venv
+/venv/**
+
+/.idea
+/.idea/**
+
+/.idea/misc.xml
+
+/static/avatar/
+/static/avatar/**
+/static/music/**
+/static/music/
